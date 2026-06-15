@@ -1,0 +1,6 @@
+{
+  "name": "Sistem Verifikasi Fee Driver",
+  "description": "Sistem verifikasi fee driver otomatis untuk mencocokkan data pengajuan Driver Leader, data ekspor TMS, data JO yang sudah dibayar, serta menghitung ulang fee berdasarkan rumus UMK.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

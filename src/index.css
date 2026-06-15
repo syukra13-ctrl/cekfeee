@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+.light {
+  color: #0f172a;
+  --color-slate-950: #f1f5f9;
+  --color-slate-900: #ffffff;             /* bg-slate-900 becomes pure white */
+  --color-slate-850: #f8fafc;
+  --color-slate-800: #e2e8f0;             /* border-slate-800 matches slate-200 border */
+  --color-slate-700: #cbd5e1;
+  --color-slate-600: #94a3b8;
+  --color-slate-550: #64748b;
+  --color-slate-500: #64748b;             /* text-slate-500 */
+  --color-slate-430: #475569;
+  --color-slate-400: #475569;             /* text-slate-400 becomes slate-600 */
+  --color-slate-350: #334155;
+  --color-slate-300: #334155;             /* text-slate-300 becomes slate-700 */
+  --color-slate-250: #1e293b;
+  --color-slate-200: #1e293b;             /* text-slate-200 becomes slate-800 */
+  --color-slate-100: #0f172a;             /* text-slate-100 becomes slate-900 */
+  --color-white: #0f172a;                 /* text-white becomes slate-900 text */
+  --color-slate-50: #f8fafc;              /* bg-slate-50 remains off-white background */
+  
+  /* Status Badges */
+  --color-emerald-950: #d1fae5;           /* Soft light green bg */
+  --color-emerald-900: #a7f3d0;           /* Border light green */
+  --color-emerald-400: #065f46;           /* Deep green text */
+  
+  --color-rose-950: #fee2e2;              /* Soft light red bg */
+  --color-rose-900: #fca5a5;              /* Border light red */
+  --color-rose-400: #991b1b;              /* Deep red text */
+  --color-rose-500: #b91c1c;
+
+  --color-amber-950: #fef3c7;             /* Soft light yellow bg */
+  --color-amber-900: #fde68a;             /* Border light yellow */
+  --color-amber-400: #92400e;              /* Deep yellow text */
+  --color-amber-500: #b45309;
+
+  --color-blue-950: #dbeafe;              /* Soft light blue bg */
+  --color-blue-900: #bfdbfe;              /* Border light blue */
+  --color-blue-400: #1e40af;              /* Deep blue text */
+
+  --color-indigo-950: #e0e7ff;            /* Soft light indigo bg */
+  --color-indigo-900: #c7d2fe;            /* Border light indigo */
+  --color-indigo-400: #3730a3;            /* Deep indigo text */
+  
+  --color-orange-950: #ffedd5;
+  --color-orange-900: #fed7aa;
+  --color-orange-400: #9a3412;
+}
