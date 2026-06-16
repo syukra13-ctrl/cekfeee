@@ -402,9 +402,55 @@ export function isCustomerMatching(cust1: string, cust2: string): boolean {
   return sim >= 0.75;
 }
 
-// Normalize date strings
-export function normalizeDate(dateStr: string): string {
-  return String(dateStr ?? '').trim().replace(/[-]/g, '/');
+// Normalize date strings, supporting both standard date formats and Excel date serial numbers (e.g. 46175, 46176)
+export function normalizeDate(dateStr: string | number): string {
+  if (dateStr === undefined || dateStr === null) return '';
+  const str = String(dateStr).trim();
+  if (!str) return '';
+
+  // Check if it's a numeric Excel serial date (e.g., 46175 or 46175.625)
+  const num = Number(str);
+  if (!isNaN(num) && num > 30000 && num < 60000) {
+    // Math.floor strips out the fractional part of the day (the hours, minutes, seconds)
+    const integerDay = Math.floor(num);
+    // Excel's epoch is Dec 30, 1899 to account for the 1900 leap year bug
+    // 25569 is Jan 1, 1970
+    const date = new Date(Math.round((integerDay - 25569) * 86400 * 1000));
+    // Use UTC methods to prevent timezone shifting
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const year = date.getUTCFullYear();
+    return `${day}/${month}/${year}`;
+  }
+
+  // For text dates, strip any time portion (after a space or 'T')
+  // e.g., "16/06/2026 14:30:00" -> "16/06/2026"
+  // e.g., "2026-06-16T14:30:00Z" -> "2026-06-16"
+  const datePart = str.split(/[\sT]+/)[0];
+
+  // 1. If it's already in DD/MM/YYYY format with slashes
+  if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(datePart)) {
+    const parts = datePart.split('/');
+    return `${parts[0].padStart(2, '0')}/${parts[1].padStart(2, '0')}/${parts[2]}`;
+  }
+
+  // 2. If in YYYY-MM-DD or YYYY/MM/DD with leading 4-digit year
+  const yyyyMmDdMatch = datePart.match(/^(\d{4})[-/](\d{2})[-/](\d{2})/);
+  if (yyyyMmDdMatch) {
+    const [, y, m, d] = yyyyMmDdMatch;
+    return `${d}/${m}/${y}`;
+  }
+
+  // Fallback: replace dashes with slashes and attempt padding
+  const replaced = datePart.replace(/[-]/g, '/');
+  const genericMatch = replaced.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+  if (genericMatch) {
+    const [, d, m, y] = genericMatch;
+    const finalYear = y.length === 2 ? `20${y}` : y;
+    return `${d.padStart(2, '0')}/${m.padStart(2, '0')}/${finalYear}`;
+  }
+
+  return replaced;
 }
 
 // Map Kota name to standard UMK rates
