@@ -356,6 +356,28 @@ export function isSubDivisionMismatched(sub1: string, sub2: string): boolean {
   return cleanSubDiv(sub1) !== cleanSubDiv(sub2);
 }
 
+// Helper to check if Customer names match, with support for specific corporate equivalents like PT TRI ADI BERSAMA = Anteraja
+export function isCustomerMatching(cust1: string, cust2: string): boolean {
+  const c1 = normalizeGeneralText(cust1);
+  const c2 = normalizeGeneralText(cust2);
+  
+  if (c1 === c2) return true;
+  if (!c1 || !c2) return false;
+
+  // Khusus PT TRI ADI BERSAMA = Anteraja
+  const isC1Adi = c1.includes('TRI ADI BERSAMA');
+  const isC2Adi = c2.includes('TRI ADI BERSAMA');
+  const isC1Anteraja = c1.includes('ANTERAJA');
+  const isC2Anteraja = c2.includes('ANTERAJA');
+
+  if ((isC1Adi && isC2Anteraja) || (isC2Adi && isC1Anteraja)) {
+    return true;
+  }
+
+  const sim = getStringSimilarity(cust1, cust2);
+  return sim >= 0.75;
+}
+
 // Normalize date strings
 export function normalizeDate(dateStr: string): string {
   return String(dateStr ?? '').trim().replace(/[-]/g, '/');
@@ -828,14 +850,29 @@ export function runValidationProcess(
       if (isMismatchedNormalized(row.platNo, tmsMatch.platNo, true)) {
         mismatches.push(`Plat No beda (Pengajuan: ${row.platNo} vs TMS: ${tmsMatch.platNo || '-'})`);
       }
+      // Sub Division pengajuan tidak ada di TMS dan pasti beda, yang benar di pengajuan (lewatkan pengecekan)
+      /*
       if (isSubDivisionMismatched(row.subDivision, tmsMatch.subDivision)) {
         mismatches.push(`Sub Division beda (Pengajuan: ${row.subDivision} vs TMS: ${tmsMatch.subDivision || '-'})`);
       }
-      const customerSim = getStringSimilarity(row.customer, tmsMatch.customer);
-      if (customerSim < 0.75) {
+      */
+
+      const isCustMatch = isCustomerMatching(row.customer, tmsMatch.customer);
+      const isC1Adi = normalizeGeneralText(row.customer).includes('TRI ADI BERSAMA');
+      const isC2Anteraja = normalizeGeneralText(tmsMatch.customer).includes('ANTERAJA');
+      const isC2Adi = normalizeGeneralText(tmsMatch.customer).includes('TRI ADI BERSAMA');
+      const isC1Anteraja = normalizeGeneralText(row.customer).includes('ANTERAJA');
+      const isSpecialCustomerMatch = (isC1Adi && isC2Anteraja) || (isC2Adi && isC1Anteraja);
+
+      if (!isCustMatch) {
         mismatches.push(`Customer beda (Pengajuan: ${row.customer} vs TMS: ${tmsMatch.customer || '-'})`);
-      } else if (customerSim < 1.0) {
-        errors.push(`Typo Customer (${Math.round(customerSim * 100)}% mirip: "${row.customer}" ≈ "${tmsMatch.customer}")`);
+      } else if (isSpecialCustomerMatch) {
+        // Khusus PT TRI ADI BERSAMA = Anteraja: Cocok Sempurna
+      } else {
+        const customerSim = getStringSimilarity(row.customer, tmsMatch.customer);
+        if (customerSim < 1.0) {
+          errors.push(`Typo Customer (${Math.round(customerSim * 100)}% mirip: "${row.customer}" ≈ "${tmsMatch.customer}")`);
+        }
       }
 
       const tmsStatusVal = String(tmsMatch.jobOrderStatus || '').trim().toUpperCase();
