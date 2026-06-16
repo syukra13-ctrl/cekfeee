@@ -28,12 +28,12 @@ function createInitialSheets() {
   const sheetsConfig = {
     'PENGAJUAN_DL': [
       'Job Order No', 'Crew ID', 'Nama Driver', 'Division', 'Job Order Status', 'ETA',
-      'Order Type', 'Fleet Type', 'Plat No', 'Sub Division', 'Homebase', 'Customer',
+      'Order Type', 'Fleet Type', 'Plat No', 'Route', 'Homebase', 'Customer',
       'Durasi Perjalanan', 'Cost Type', 'Jenis Hari Kerja', 'Kota UMK', 'Nilai UMK', 'Fee UMK'
     ],
     'EXPORT_TMS': [
       'Job Order No', 'Crew ID', 'Nama Driver', 'Division', 'Job Order Status', 'ETA',
-      'Order Type', 'Fleet Type', 'Plat No', 'Sub Division', 'Customer'
+      'Order Type', 'Fleet Type', 'Plat No', 'Route', 'Customer'
     ],
     'JO_SUDAH_DIBAYAR': [
       'Job Order No', 'Tanggal Bayar', 'Periode Bayar', 'Crew ID', 'Nama Driver',
@@ -44,7 +44,7 @@ function createInitialSheets() {
       'Nama Driver Pengajuan', 'Nama Driver TMS', 'Division Pengajuan', 'Division TMS',
       'Job Order Status Pengajuan', 'Job Order Status TMS', 'ETA Pengajuan', 'ETA TMS',
       'Order Type Pengajuan', 'Order Type TMS', 'Fleet Type Pengajuan', 'Fleet Type TMS',
-      'Plat No Pengajuan', 'Plat No TMS', 'Sub Division Pengajuan', 'Sub Division TMS',
+      'Plat No Pengajuan', 'Plat No TMS', 'Route Pengajuan', 'Route TMS',
       'Customer Pengajuan', 'Customer TMS', 'Homebase', 'Durasi Perjalanan',
       'Cost Type', 'Jenis Hari Kerja', 'Kota UMK', 'Nilai UMK',
       'Fee UMK Pengajuan', 'Fee Hitung Ulang', 'Selisih Fee', 'Status Validasi TMS',
@@ -150,7 +150,7 @@ function runVerificationInSheets() {
     'Nama Driver Pengajuan', 'Nama Driver TMS', 'Division Pengajuan', 'Division TMS', 
     'Job Order Status Pengajuan', 'Job Order Status TMS', 'ETA Pengajuan', 'ETA TMS', 
     'Order Type Pengajuan', 'Order Type TMS', 'Fleet Type Pengajuan', 'Fleet Type TMS', 
-    'Plat No Pengajuan', 'Plat No TMS', 'Sub Division Pengajuan', 'Sub Division TMS', 
+    'Plat No Pengajuan', 'Plat No TMS', 'Route Pengajuan', 'Route TMS', 
     'Customer Pengajuan', 'Customer TMS', 'Homebase', 'Durasi Perjalanan', 
     'Cost Type', 'Jenis Hari Kerja', 'Kota UMK', 'Nilai UMK', 
     'Fee UMK Pengajuan', 'Fee Hitung Ulang', 'Selisih Fee', 'Status Validasi TMS', 
@@ -236,8 +236,8 @@ function runVerificationInSheets() {
       if (isMismatched(normalizePlat(row['Plat No']), normalizePlat(tmsMatch['Plat No']))) {
         diffDetails.push('Plat No tidak cocok (Pengajuan = ' + row['Plat No'] + ', TMS = ' + (tmsMatch['Plat No'] || '-') + ')');
       }
-      if (isMismatched(row['Sub Division'], tmsMatch['Sub Division'])) {
-        diffDetails.push('Sub Division tidak cocok (Pengajuan = ' + row['Sub Division'] + ', TMS = ' + (tmsMatch['Sub Division'] || '-') + ')');
+      if (isMismatched(row['Route'], tmsMatch['Route'])) {
+        diffDetails.push('Route tidak cocok (Pengajuan = ' + row['Route'] + ', TMS = ' + (tmsMatch['Route'] || '-') + ')');
       }
       if (isMismatched(row['Customer'], tmsMatch['Customer'])) {
         diffDetails.push('Customer tidak cocok (Pengajuan = ' + row['Customer'] + ', TMS = ' + (tmsMatch['Customer'] || '-') + ')');
@@ -293,8 +293,8 @@ function runVerificationInSheets() {
       tmsMatch ? (tmsMatch['Fleet Type'] || '') : '-',
       row['Plat No'] || '',
       tmsMatch ? (tmsMatch['Plat No'] || '') : '-',
-      row['Sub Division'] || '',
-      tmsMatch ? (tmsMatch['Sub Division'] || '') : '-',
+      row['Route'] || '',
+      tmsMatch ? (tmsMatch['Route'] || '') : '-',
       row['Customer'] || '',
       tmsMatch ? (tmsMatch['Customer'] || '') : '-',
       row['Homebase'] || '',
