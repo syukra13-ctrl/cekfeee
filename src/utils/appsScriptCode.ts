@@ -212,7 +212,46 @@ function runVerificationInSheets() {
     } else {
       const diffDetails = [];
       const normalizePlat = p => String(p || '').replace(/[\s-]/g, '').toLowerCase();
-      const normalizeDate = d => String(d || '').trim().replace(/[-]/g, '/');
+      const normalizeDate = d => {
+        if (!d) return '';
+        const str = String(d).trim();
+        if (!str) return '';
+
+        // Check if it's a numeric Excel serial date (e.g., 46175 or 46175.625)
+        const num = Number(str);
+        if (!isNaN(num) && num > 30000 && num < 60000) {
+          const integerDay = Math.floor(num);
+          const dateObj = new Date(Math.round((integerDay - 25569) * 86400 * 1000));
+          const day = String(dateObj.getUTCDate()).padStart(2, '0');
+          const month = String(dateObj.getUTCMonth() + 1).padStart(2, '0');
+          const year = dateObj.getUTCFullYear();
+          return day + '/' + month + '/' + year;
+        }
+
+        // For text dates, strip any time portion (after a space or 'T')
+        const datePart = str.split(/[\sT]+/)[0];
+
+        // 1. Already in standard DD/MM/YYYY format with slashes
+        if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(datePart)) {
+          const parts = datePart.split('/');
+          return parts[0].padStart(2, '0') + '/' + parts[1].padStart(2, '0') + '/' + parts[2];
+        }
+        // 2. Format YYYY-MM-DD
+        const yyyyMmDdMatch = datePart.match(/^(\d{4})[-/](\d{2})[-/](\d{2})/);
+        if (yyyyMmDdMatch) {
+          const [, y, m, dVal] = yyyyMmDdMatch;
+          return dVal + '/' + m + '/' + y;
+        }
+        // Fallback
+        const replaced = datePart.replace(/[-]/g, '/');
+        const genericMatch = replaced.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+        if (genericMatch) {
+          const [, dPart, mPart, yPart] = genericMatch;
+          const finalYear = yPart.length === 2 ? '20' + yPart : yPart;
+          return dPart.padStart(2, '0') + '/' + mPart.padStart(2, '0') + '/' + finalYear;
+        }
+        return replaced;
+      };
       const isMismatched = (v1, v2) => String(v1 || '').trim().toLowerCase() !== String(v2 || '').trim().toLowerCase();
       
       if (isMismatched(row['Crew ID'], tmsMatch['Crew ID'])) {
