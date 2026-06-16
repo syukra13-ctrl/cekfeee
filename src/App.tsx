@@ -1022,7 +1022,7 @@ export default function App() {
                           <th className="py-3 px-4">JO No</th>
                           <th className="py-3 px-4">Identitas Driver</th>
                           <th className="py-3 px-4">Plat Kendaraan</th>
-                          <th className="py-3 px-4">Route</th>
+                          <th className="py-3 px-4">Homebase</th>
                           <th className="py-3 px-4 text-right">Fee Pengajuan</th>
                           <th className="py-3 px-4 text-right">Fee Hitung</th>
                           <th className="py-3 px-4">Keputusan</th>
