@@ -1,6 +1,6 @@
 import React from 'react';
 import { ValidationResult } from '../types';
-import { getStringSimilarity } from '../utils/validationEngine';
+import { getStringSimilarity, isCustomerMatching, normalizeGeneralText } from '../utils/validationEngine';
 import { 
   X, 
   CheckCircle2, 
@@ -51,7 +51,14 @@ export default function InvestigationDetailPanel({
   const customerSimilarity = hasTms ? getStringSimilarity(row.customerPengajuan, row.customerTms) : 0;
 
   const driverMatch = hasTms && (row.crewIdPengajuan === row.crewIdTms || driverSimilarity >= 0.80);
-  const customerMatch = hasTms && (customerSimilarity >= 0.75);
+  const customerMatch = hasTms && isCustomerMatching(row.customerPengajuan, row.customerTms);
+  
+  const isC1Adi = normalizeGeneralText(row.customerPengajuan).includes('TRI ADI BERSAMA');
+  const isC2Anteraja = normalizeGeneralText(row.customerTms).includes('ANTERAJA');
+  const isC2Adi = normalizeGeneralText(row.customerTms).includes('TRI ADI BERSAMA');
+  const isC1Anteraja = normalizeGeneralText(row.customerPengajuan).includes('ANTERAJA');
+  const isSpecialCustomerMatch = (isC1Adi && isC2Anteraja) || (isC2Adi && isC1Anteraja);
+
   const platMatch = hasTms && (row.platNoPengajuan.replace(/[\-\.\,\s]/g, '').toUpperCase() === row.platNoTms.replace(/[\-\.\,\s]/g, '').toUpperCase());
   const isClosed = hasTms && row.jobOrderStatusTms.toUpperCase() === 'CLOSED';
   const feeMatch = row.statusFee === 'FEE SESUAI';
@@ -66,7 +73,7 @@ export default function InvestigationDetailPanel({
       vital: false 
     },
     { 
-      label: `Customer cocok ${customerMatch && customerSimilarity < 1.0 && customerSimilarity >= 0.75 ? `(Fuzzy ${Math.round(customerSimilarity * 100)}% mirip)` : ''}`, 
+      label: `Customer cocok ${customerMatch && isSpecialCustomerMatch ? '(Aturan Ekuivalen PT TAB = Anteraja)' : (customerMatch && customerSimilarity < 1.0 ? `(Fuzzy ${Math.round(customerSimilarity * 100)}% mirip)` : '')}`, 
       passed: customerMatch, 
       vital: false 
     },
@@ -259,7 +266,12 @@ export default function InvestigationDetailPanel({
                   <Building className="w-3.5 h-3.5" />
                   CUSTOMER NAME
                 </span>
-                {customerMatch && customerSimilarity < 1.0 && (
+                {customerMatch && isSpecialCustomerMatch && (
+                  <span className="text-[9px] text-indigo-400 bg-indigo-950/50 px-1 py-0.2 rounded border border-indigo-900/50 font-bold">
+                    TAB = Anteraja Equivalence
+                  </span>
+                )}
+                {customerMatch && !isSpecialCustomerMatch && customerSimilarity < 1.0 && (
                   <span className="text-[9px] text-amber-400 bg-amber-950/50 px-1 py-0.2 rounded border border-amber-900/50 font-bold">
                     {Math.round(customerSimilarity * 100)}% Match (Fuzzy)
                   </span>
