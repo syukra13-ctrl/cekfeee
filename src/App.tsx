@@ -254,7 +254,7 @@ export default function App() {
           return;
         }
 
-        const MAX_ROWS = 10000;
+        const MAX_ROWS = 20000;
         let finalJson = rawJson;
         if (rawJson.length > MAX_ROWS) {
           alert(`Pemberitahuan: Jumlah baris data dalam berkas (${rawJson.length.toLocaleString()} baris) melebihi batas performa optimal browser. Sistem secara otomatis membatasi hingga ${MAX_ROWS.toLocaleString()} baris teratas demi mencegah lag pada tampilan.`);
