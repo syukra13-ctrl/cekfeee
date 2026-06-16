@@ -1,6 +1,6 @@
 import { PengajuanRow, TmsRow, AlreadyPaidRow, ValidationResult, DashboardStats, CostTypeFormula, DriverLeaderStats, MasterUmkMapping } from '../types';
 
-// Normalize customer/sub division strings for resilient substring & fuzzy containment matching
+// Normalize customer/route strings for resilient substring & fuzzy containment matching
 export function cleanSubDiv(str: string): string {
   return String(str || '')
     .toUpperCase()
@@ -351,7 +351,7 @@ export function getStringSimilarity(str1: string, str2: string): number {
   return (maxLength - distance) / maxLength;
 }
 
-// Helper to compare Sub Division values normally
+// Helper to compare Route values normally
 export function isSubDivisionMismatched(sub1: string, sub2: string): boolean {
   return cleanSubDiv(sub1) !== cleanSubDiv(sub2);
 }
@@ -850,10 +850,10 @@ export function runValidationProcess(
       if (isMismatchedNormalized(row.platNo, tmsMatch.platNo, true)) {
         mismatches.push(`Plat No beda (Pengajuan: ${row.platNo} vs TMS: ${tmsMatch.platNo || '-'})`);
       }
-      // Sub Division pengajuan tidak ada di TMS dan pasti beda, yang benar di pengajuan (lewatkan pengecekan)
+      // Route pengajuan tidak ada di TMS dan pasti beda, yang benar di pengajuan (lewatkan pengecekan)
       /*
       if (isSubDivisionMismatched(row.subDivision, tmsMatch.subDivision)) {
-        mismatches.push(`Sub Division beda (Pengajuan: ${row.subDivision} vs TMS: ${tmsMatch.subDivision || '-'})`);
+        mismatches.push(`Route beda (Pengajuan: ${row.subDivision} vs TMS: ${tmsMatch.subDivision || '-'})`);
       }
       */
 
