@@ -62,7 +62,7 @@ export default function MasterUmkView({
       return;
     }
     if (!subDivision.trim()) {
-      setFormError('Sub Division wajib diisi.');
+      setFormError('Homebase wajib diisi.');
       return;
     }
     if (!kotaUmk.trim()) {
@@ -108,7 +108,7 @@ export default function MasterUmkView({
              m.skema === skema
       );
       if (isDuplicate) {
-        setFormError('Konfigurasi untuk kombinasi Division, Sub Division & Skema tersebut sudah terdaftar.');
+        setFormError('Konfigurasi untuk kombinasi Division, Homebase & Skema tersebut sudah terdaftar.');
         return;
       }
 
@@ -239,11 +239,11 @@ export default function MasterUmkView({
 
               <div>
                 <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-                  Sub Division <span className="text-rose-400">*</span>
+                  Homebase <span className="text-rose-400">*</span>
                 </label>
                 <input
                   type="text"
-                  placeholder="Contoh: ANTERAJA - BANDUNG, MAYORA - CICALENGKA"
+                  placeholder="Contoh: BAT - MALANG, BAT - SURABAYA"
                   value={subDivision}
                   onChange={e => setSubDivision(e.target.value)}
                   className="w-full bg-slate-950 border border-slate-800 rounded p-2.5 text-slate-100 focus:outline-none focus:border-indigo-500"
@@ -338,7 +338,7 @@ export default function MasterUmkView({
                 </span>
                 <input
                   type="text"
-                  placeholder="Cari divisi, sub-divisi, kota..."
+                  placeholder="Cari divisi, homebase, kota..."
                   value={searchTerm}
                   onChange={e => setSearchTerm(e.target.value)}
                   className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-9 pr-4 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
@@ -360,7 +360,7 @@ export default function MasterUmkView({
                 <thead>
                   <tr className="bg-slate-950 border-b border-slate-850">
                     <th className="p-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">DIVISION</th>
-                    <th className="p-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">SUB DIVISION</th>
+                    <th className="p-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">HOMEBASE</th>
                     <th className="p-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">SKEMA</th>
                     <th className="p-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">KOTA UMK</th>
                     <th className="p-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">UMK 2026</th>
@@ -430,7 +430,7 @@ export default function MasterUmkView({
             <div className="p-3 rounded-lg bg-indigo-950/15 border border-indigo-900/20 text-[11px] text-slate-450 leading-relaxed flex items-start gap-2">
               <AlertCircle className="w-4 h-4 text-indigo-455 shrink-0 mt-0.5" />
               <span>
-                <strong>Bagaimana pencocokan (matching) bekerja?</strong> Saat berkas pengajuan direkonsiliasi, sistem akan secara otomatis melacak data <strong>Division</strong> dan <strong>Customer</strong> (sebagai <strong>Sub Division</strong>). Apabila ditemukan kesesuaian pada database di atas, perhitungan biaya harian untuk Driver akan secara presisi dijalankan menggunakan besaran nominal <strong>UMK</strong> yang tertera, bersanding secara fleksibel dengan Hari Kerja dari berkas pengajuan.
+                <strong>Bagaimana pencocokan (matching) bekerja?</strong> Saat berkas pengajuan direkonsiliasi, sistem akan secara otomatis melacak data <strong>Division</strong> dan <strong>Homebase</strong> dari berkas pengajuan. Apabila ditemukan kesesuaian pada database di atas, perhitungan biaya harian untuk Driver akan secara presisi dijalankan menggunakan besaran nominal <strong>UMK</strong> yang tertera, bersanding secara fleksibel dengan Hari Kerja dari berkas pengajuan.
               </span>
             </div>
           </div>
