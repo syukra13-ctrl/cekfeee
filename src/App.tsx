@@ -407,7 +407,7 @@ export default function App() {
           'Order Type': 'Regular',
           'Fleet Type': 'CDD.L',
           'Plat No': 'B-9115-NCJ',
-          'Sub Division': 'CWH MALANG - BLITAR',
+          'Route': 'CWH MALANG - BLITAR',
           'Homebase': 'BAT - MALANG',
           'Customer': 'PT. BAT - MALANG',
           'Durasi Perjalanan': 1,
@@ -429,7 +429,7 @@ export default function App() {
           'Order Type': 'Regular',
           'Fleet Type': 'CDD.L',
           'Plat No': 'B-9115-NCJ',
-          'Sub Division': 'CWH MALANG - BLITAR',
+          'Route': 'CWH MALANG - BLITAR',
           'Homebase': 'BAT - MALANG',
           'Customer': 'PT. BAT - MALANG',
           'Durasi Perjalanan': 1,
@@ -455,7 +455,7 @@ export default function App() {
           'Order Type': 'Regular',
           'Fleet Type': 'CDD.L',
           'Plat No': 'B-9115-NCJ',
-          'Sub Division': 'CWH MALANG - BLITAR',
+          'Route': 'CWH MALANG - BLITAR',
           'Customer': 'PT. BAT MALANG'
         },
         {
@@ -468,7 +468,7 @@ export default function App() {
           'Order Type': 'Regular',
           'Fleet Type': 'CDD.L',
           'Plat No': 'B-9115-NCJ',
-          'Sub Division': 'CWH MALANG - BLITAR',
+          'Route': 'CWH MALANG - BLITAR',
           'Customer': 'PT. BAT MALANG'
         }
       ];
@@ -1022,7 +1022,7 @@ export default function App() {
                           <th className="py-3 px-4">JO No</th>
                           <th className="py-3 px-4">Identitas Driver</th>
                           <th className="py-3 px-4">Plat Kendaraan</th>
-                          <th className="py-3 px-4">Sub Division</th>
+                          <th className="py-3 px-4">Route</th>
                           <th className="py-3 px-4 text-right">Fee Pengajuan</th>
                           <th className="py-3 px-4 text-right">Fee Hitung</th>
                           <th className="py-3 px-4">Keputusan</th>
