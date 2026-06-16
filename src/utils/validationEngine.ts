@@ -197,28 +197,52 @@ export function getUmkAndHkFromMaster(
   row: { division?: string; customer?: string; subDivision?: string; skemaFee?: string; jenisHariKerja?: number; kotaUmk?: string; homebase?: string; nilaiUmk?: number },
   masterList: MasterUmkMapping[] = []
 ): { nilaiUmk: number; jenisHariKerja: number; skema: 'DAILY' | 'RITASE' } {
-  const rowCust = String(row.subDivision || row.customer || '').trim().toUpperCase();
+  const rowCust = String(row.homebase || row.subDivision || row.customer || '').trim().toUpperCase();
   const rowSkema = String(row.skemaFee || '').trim().toUpperCase();
   const rowHk = parseSafeInt(row.jenisHariKerja, 25);
 
   const cleanRowCust = cleanSubDiv(rowCust);
+  const rowDiv = String(row.division || '').trim().toUpperCase();
 
   let subMatches: MasterUmkMapping[] = [];
 
-  // Search the master list globally by subdivision name which is unique and specific
+  // Prioritize Master UMK entries under the same division to prevent cross-region incorrect matches
+  const sameDivMaster = masterList.filter(m => {
+    const mDiv = String(m.division || '').trim().toUpperCase();
+    return mDiv === rowDiv || mDiv.includes(rowDiv) || rowDiv.includes(mDiv);
+  });
+
+  const candidateList = sameDivMaster.length > 0 ? sameDivMaster : masterList;
+
+  // Search the candidate list by subdivision/route name
   if (cleanRowCust) {
-    // 1. Exact match on clean name
-    subMatches = masterList.filter(m => {
+    // 1. Exact match on clean name within candidate list
+    subMatches = candidateList.filter(m => {
       const cleanMasterSub = cleanSubDiv(m.subDivision);
       return cleanRowCust === cleanMasterSub;
     });
 
-    // 2. Substring matching fallback
+    // 2. Substring matching fallback within candidate list
     if (subMatches.length === 0) {
-      subMatches = masterList.filter(m => {
+      subMatches = candidateList.filter(m => {
         const cleanMasterSub = cleanSubDiv(m.subDivision);
         return cleanRowCust.includes(cleanMasterSub) || cleanMasterSub.includes(cleanRowCust);
       });
+    }
+
+    // 3. Global fallback to the full master list if we restricted to division but found absolutely nothing
+    if (subMatches.length === 0 && candidateList !== masterList) {
+      subMatches = masterList.filter(m => {
+        const cleanMasterSub = cleanSubDiv(m.subDivision);
+        return cleanRowCust === cleanMasterSub;
+      });
+
+      if (subMatches.length === 0) {
+        subMatches = masterList.filter(m => {
+          const cleanMasterSub = cleanSubDiv(m.subDivision);
+          return cleanRowCust.includes(cleanMasterSub) || cleanMasterSub.includes(cleanRowCust);
+        });
+      }
     }
   }
 
@@ -237,7 +261,7 @@ export function getUmkAndHkFromMaster(
       }
     }
     
-    // Otherwise, return the first match from Master List
+    // Otherwise, return the first match from candidate list
     const m = subMatches[0];
     return {
       nilaiUmk: m.nilaiUmk,
