@@ -189,9 +189,9 @@ function runVerificationInSheets() {
     
     let feeHitungUlang = 0;
     if (jenisHariKerja > 0) {
-      const rawValue = (nilaiUmk / jenisHariKerja) * durasiPerjalanan;
-      // Formula ROUNDUP(x, -3) ke ribuan terdekat
-      feeHitungUlang = Math.ceil(rawValue / 1000) * 1000;
+      // Formula ROUNDUP(UMK / HK, -3) * Durasi
+      const dailyRate = Math.ceil((nilaiUmk / jenisHariKerja) / 1000) * 1000;
+      feeHitungUlang = dailyRate * durasiPerjalanan;
     }
     
     const selisihFee = feeUmkPengajuan - feeHitungUlang;
