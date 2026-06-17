@@ -601,10 +601,11 @@ export function evaluateFormula(
   if (formula.type === 'formula') {
     try {
       if (rawHK && rawHK > 0) {
-        const base = (rawNilai / rawHK) * rawDurasi;
         if (formula.formulaExpression.includes('-3') || formula.formulaExpression.toUpperCase().includes('ROUNDUP')) {
-          return Math.ceil(base / 1000) * 1000;
+          const dailyRate = Math.ceil((rawNilai / rawHK) / 1000) * 1000;
+          return dailyRate * rawDurasi;
         }
+        const base = (rawNilai / rawHK) * rawDurasi;
         return Math.ceil(base);
       }
     } catch (e) {
@@ -613,8 +614,8 @@ export function evaluateFormula(
   }
 
   // Fallback default formula UMK rounding
-  const defaultBase = (rawNilai / rawHK) * rawDurasi;
-  return Math.ceil(defaultBase / 1000) * 1000;
+  const dailyRateDefault = Math.ceil((rawNilai / rawHK) / 1000) * 1000;
+  return dailyRateDefault * rawDurasi;
 }
 
 // Custom Roundup for backwards compatibility if needed
@@ -622,8 +623,8 @@ export function calculateFeeUMK(nilaiUmk: number, jenisHariKerja: number, durasi
   const safeUmk = nilaiUmk > 0 ? nilaiUmk : 0;
   const safeHk = jenisHariKerja > 0 ? jenisHariKerja : 25;
   const safeDurasi = durasiPerjalanan > 0 ? durasiPerjalanan : 1;
-  const rawValue = (safeUmk / safeHk) * safeDurasi;
-  return Math.ceil(rawValue / 1000) * 1000;
+  const dailyRate = Math.ceil((safeUmk / safeHk) / 1000) * 1000;
+  return dailyRate * safeDurasi;
 }
 
 // Main verification process incorporating system decisions and normalisations
